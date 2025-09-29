@@ -25,5 +25,5 @@ jobs:
           context: .
           push: true
           tags: |
-            your-dockerhub-user/meu-projeto:latest
-            your-dockerhub-user/meu-projeto:${{ github.sha }}
+            raicasale/projeto-versionamento:latest
+            raicasale/projeto-versionamento:${{ github.sha }}

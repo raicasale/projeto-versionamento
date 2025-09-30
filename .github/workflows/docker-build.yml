@@ -2,8 +2,8 @@ name: Build e Push Imagem Docker
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'   # dispara só em tags do tipo v1.2.3
 
 jobs:
   docker:
@@ -19,11 +19,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build e push da imagem versionada
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: |
-            raicasale/projeto-versionamento:latest
-            raicasale/projeto-versionamento:${{ github.sha }}
+          tags: raicasale/projeto-versionamento:${{ github.ref_name }}
+
+      - name: Update latest tag if newer
+        uses: imjasonh/update-latest-docker-tag@v1
+        with:
+          image: raicasale/projeto-versionamento
+          tag: ${{ github.ref_name }}
+          registry-user: ${{ secrets.DOCKERHUB_USERNAME }}
+          registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
